@@ -29,11 +29,23 @@ def fetch_comment_threads(youtube, video_id, max_results=100):
     return request.execute()
 
 
+def parse_comment_threads(response):
+    """Extract top-level comment text from the commentThreads response."""
+    comments = []
+    for item in response.get("items", []):
+        comment_text = item["snippet"]["topLevelComment"]["snippet"]["textOriginal"]
+        comments.append(comment_text)
+    return comments
+
+
 def main():
     youtube = get_youtube_service()
     video_id = input("Enter YouTube video ID: ").strip()
     response = fetch_comment_threads(youtube, video_id)
-    print(f"Fetched {len(response.get('items', []))} comment threads")
+    comments = parse_comment_threads(response)
+    print(f"Fetched {len(comments)} top-level comments")
+    for comment in comments:
+        print(comment)
 
 
 if __name__ == "__main__":
