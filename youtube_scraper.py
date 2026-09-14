@@ -5,9 +5,12 @@ top-level comments for a given video.
 """
 
 import os
+import sys
 
 from dotenv import load_dotenv
 from googleapiclient.discovery import build
+
+sys.stdout.reconfigure(encoding="utf-8")
 
 load_dotenv()
 
