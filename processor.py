@@ -51,11 +51,24 @@ def analyze_single_comment(client, comment):
     return response.choices[0].message.content
 
 
+def process_comments_batch(client, comments):
+    """Iterate through comments and pass each to the Groq API for inference."""
+    results = []
+    for index, comment in enumerate(comments, start=1):
+        print(f"[{index}/{len(comments)}] Analyzing: {comment[:60]!r}")
+        raw = analyze_single_comment(client, comment)
+        results.append({"comment": comment, "analysis": raw})
+    return results
+
+
 def main():
     client = get_client()
-    text = input("Enter a comment to analyze: ").strip()
-    raw = analyze_single_comment(client, text)
-    print(raw)
+    comments = [
+        input("Enter a comment to analyze: ").strip(),
+        input("Enter another comment to analyze: ").strip(),
+    ]
+    for result in process_comments_batch(client, comments):
+        print(result)
 
 
 if __name__ == "__main__":
